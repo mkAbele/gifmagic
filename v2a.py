@@ -42,6 +42,7 @@ def ascii_conversion(bw_image,ascii_string = [" ",".",":","-","=","+","*","#","%
 def get_color(image):      
   pixels = image.getdata()  # Creates a list with the RGB value for each pixel
   return pixels
+  
 def print_ascii(ascii_list, image, color,image_pos):
   file = open('HtmlImages/Html{0}.html'.format(str(image_pos)),"w") 
   file.write("""                                      
