@@ -3,7 +3,7 @@ import numpy as np
 import imageio
 
 # ASCII characters to represent different shades of gray
-ASCII_CHARS = ' IDritVaiKociņ'
+ASCII_CHARS = ' .ThisIsMyCat!'
 
 def v2i(video, path):
     # Open the video file
@@ -121,8 +121,16 @@ def create_ascii_image(srcimg, outputimg, font_size=8):
 def main(image_path, output_path):
 
     # Open the video file
-    video_path = 'C2_A.mp4'
+    video_path = 'video_example.mp4'
     cap = cv2.VideoCapture(video_path)
+
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    # Define the codec and create VideoWriter object
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # or 'XVID', 'MJPG', etc.
+    output_video = cv2.VideoWriter('Video_example_ASCI.mp4', fourcc, fps, (frame_width, frame_height))
 
     # Initialize a list to store frames
     frames = []
@@ -136,27 +144,31 @@ def main(image_path, output_path):
         if not ret:
             break
 
-        blank_image = np.ones((800, 800, 3), np.uint8) * 0
-        ascii_img = create_ascii_image(frame, blank_image, 4)
-        #debug_image_data(ascii_img)
+        blank_image = np.ones((frame_height, frame_width, 3), np.uint8) * 0
+        ascii_img = create_ascii_image(frame, blank_image, 5)
+        
 
         # Convert the frame to RGB (imageio requires RGB format)
         frame_rgb = cv2.cvtColor(ascii_img, cv2.COLOR_BGR2RGB)
-
+        # debug_image_data(frame_rgb)
         # Append the frame to the list
-        frames.append(frame_rgb)
+        # frames.append(frame_rgb)
+        output_video.write(ascii_img)
 
     # Release the video capture object
     cap.release()
+    output_video.release()
+    cv2.destroyAllWindows()
+
 
     # Save the frames as a GIF using imageio
-    gif_path = 'C2_A_4.gif'
-    imageio.mimsave(gif_path, frames, fps=12)
+    # gif_path = 'C1_A_5_BesiMajasDarbi.gif'
+    # imageio.mimsave(gif_path, frames, fps=12)
 
     # #Create new blank image
     # blank_image = np.ones((500, 500, 3), np.uint8) * 0
 
-    # # Load the image
+    # # # Load the image
     # image = cv2.imread(image_path)
 
     # ascii_img = create_ascii_image(image, blank_image, 4)
